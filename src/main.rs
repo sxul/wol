@@ -18,6 +18,7 @@ fn main() {
             Arg::new("mac_address")
                 .value_name("MAC_ADDRESS")
                 .help("Target MAC address, e.g. 00:11:22:33:44:55")
+                .num_args(0..)
                 .required_unless_present("file"), 
         )
         .arg(
@@ -60,10 +61,10 @@ fn main() {
 
         read_mac_addresses_from_file(file_path)
     } else {
-        vec![matches
-            .get_one::<String>("mac_address")
-            .unwrap()
-            .to_string()]
+        matches.get_many::<String>("mac_address")
+        .unwrap()
+        .map(|s| s.to_string())
+        .collect()
     };
 
     let networks = if let Some(custom_net) = matches.get_many::<String>("net") {
@@ -118,7 +119,7 @@ fn send_wol_packet(mac_address: &str, networks: &Vec<Ipv4Net>, verbose_mode: boo
             Ok(_) => {}
             Err(err) => {
                 println!("Error: {}, original MAC address: {}", err, mac_address);
-                continue;
+                break;
             }
         }
         if verbose_mode {
