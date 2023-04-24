@@ -96,9 +96,9 @@ fn main() {
             );
             continue;
         }
-        if !mac_address.contains(':') {
+        if !mac_address.contains(':') && !mac_address.contains('-') {
             println!(
-                "Error: invalid MAC address format (should be separated by :), original MAC address: {}",
+                "Error: invalid MAC address format (should be separated by : or -), original MAC address: {}",
                 mac_address
             );
             continue;
@@ -136,9 +136,12 @@ fn send_magic_packet(
     target_mac: &str,
     ip_net: &Ipv4Net,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let mac_parts: Vec<&str> = target_mac.split(':').collect();
+    let mut mac_parts: Vec<&str> = target_mac.split(':').collect();
     if mac_parts.len() != 6 {
-        return Err("Invalid MAC address format, should be 6 parts".into());
+        mac_parts = target_mac.split('-').collect();
+        if mac_parts.len() != 6 {
+            return Err("Invalid MAC address format, should be 6 parts".into());
+        }
     }
 
     let mut mac_bytes = [0u8; 6];
@@ -218,7 +221,7 @@ fn read_mac_addresses_from_file(file_path: &PathBuf) -> Vec<String> {
             continue;
         }
         // invalid MAC address format (should be separated by :)
-        if !line.contains(':') {
+        if !line.contains(':') && !line.contains('-') {
             continue;
         }
         mac_addresses.push(line);

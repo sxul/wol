@@ -29,13 +29,13 @@ To use this tool, simply enter the following command in your terminal:
 wol [OPTIONS] <MAC_ADDRESS>
 ```
 
-Where MAC_ADDRESS is the MAC address of the computer you want to wake up, separated by : or - between the bytes. If you need to wake up multiple computers, you can specify multiple MAC addresses in the command line arguments.
+Where MAC_ADDRESS is the MAC address of the computer you want to wake up, separated by `:` or `-` between the bytes. If you need to wake up multiple computers, you can specify multiple MAC addresses in the command line arguments.
 
 This tool supports the following command line options
 
 `-h`, `--help`: Display help information.
 
-`-f`, `--file FILE`: Reads MAC addresses from the specified file, one address per line. The addresses in the file should be separated by `:` between bytes.
+`-f`, `--file FILE`: Reads MAC addresses from the specified file, one address per line. The addresses in the file should be separated by `:` or `-` between bytes.
 
 `-n`, `--net IP_ADDRESS`: Specify the IP address of the network interface to use. If this option is not specified, **all network interfaces** will be used.
 
@@ -49,7 +49,7 @@ This tool supports the following command line options
 # Wake up a single computer
 wol 01:23:45:67:89:ab
 
-# Wake up multiple computers (not implemented yet)
+# Wake up multiple computers
 wol 01:23:45:67:89:ab 23-45-67-89-ab-cd
 
 # Read MAC addresses from a file and wake up computers
