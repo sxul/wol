@@ -4,7 +4,7 @@ Wake-on-LAN (WOL) can be useful if you need to remotely wake up a computer on yo
 This project is a WOL command line tool written in Rust. It allows you to send WOL magic packets over your local network to wake up a specific computer that is in sleep mode. This tool has the following features
 
 Supports reading target MAC addresses from command line arguments or a file.
-Supports using the `-n' or `--net' option to specify the network interface to use, so you can choose the right one in case of multiple network interfaces.
+Supports using the `-n` or `--net` option to specify the network interface to use, so you can choose the right one in case of multiple network interfaces.
 Supports waking up multiple computers by sending magic packets to multiple broadcast networks.
 
 # How to Use
@@ -33,11 +33,15 @@ Where MAC_ADDRESS is the MAC address of the computer you want to wake up, separa
 
 This tool supports the following command line options
 
--h, --help: Display help information.
--f, --file FILE: Reads MAC addresses from the specified file, one address per line. The addresses in the file should be separated by `:` between bytes.
--n, --net IP_ADDRESS: Specify the IP address of the network interface to use. If this option is not specified, **all network interfaces** will be used.
--v, --verbose: Display verbose information, such as the network interface used to send the magic packet.
--V, --version: Display version information.
+`-h`, `--help`: Display help information.
+
+`-f`, `--file FILE`: Reads MAC addresses from the specified file, one address per line. The addresses in the file should be separated by `:` between bytes.
+
+`-n`, `--net IP_ADDRESS`: Specify the IP address of the network interface to use. If this option is not specified, **all network interfaces** will be used.
+
+`-v`, `--verbose`: Display verbose information, such as the network interface used to send the magic packet.
+
+`-V`, `--version`: Display version information.
 
 ### Examples
 
