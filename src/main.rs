@@ -33,6 +33,8 @@ fn main() {
                 .short('n')
                 .long("net")
                 .value_name("NET")
+                .num_args(0..)
+                .action(clap::ArgAction::Append)
                 .help("Specify the network address to send the broadcast, use CIDR notation, e.g. 192.168.1.0/24"),
         )
         .arg(
@@ -64,17 +66,22 @@ fn main() {
             .to_string()]
     };
 
-    let networks = if let Some(custom_net) = matches.get_one::<String>("net") {
-        vec![match custom_net.parse() {
-            Ok(v) => v,
-            Err(err) => {
-                println!(
-                    "Error: {}, valied address with CIDR notation, e.g. 192.168.1.0/24",
-                    err
-                );
-                std::process::exit(1);
-            }
-        }]
+    let networks = if let Some(custom_net) = matches.get_many::<String>("net") {
+        custom_net
+            .into_iter()
+            .map(|net| {
+                match net.parse::<Ipv4Net>() {
+                    Ok(v) => v,
+                    Err(err) => {
+                        println!(
+                            "Error: {}. Correct address in CIDR notation, e.g. 192.168.1.0/24",
+                            err
+                        );
+                        std::process::exit(1);
+                    }
+                }
+            })
+            .collect()
     } else {
         get_local_ip_nets()
     };
