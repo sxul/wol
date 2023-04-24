@@ -3,7 +3,7 @@ use if_addrs::get_if_addrs;
 use ipnet::Ipv4Net;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
-use std::net::{SocketAddr, UdpSocket};
+use std::net::{IpAddr, Ipv4Addr, SocketAddr, UdpSocket};
 
 const WOL_PORT: u16 = 9;
 const MAGIC_HEADER: [u8; 6] = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF];
@@ -64,9 +64,17 @@ fn main() {
 }
 
 fn send_wol_packet(mac_address: &str, networks: &Vec<Ipv4Net>, verbose_mode: bool) {
-    let socket = UdpSocket::bind("0.0.0.0:0").unwrap();
+    let socket = UdpSocket::bind(
+        SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 0)
+    ).unwrap();
     for broadcast_net in networks {
-        send_magic_packet(&socket, mac_address, &broadcast_net).unwrap();
+        match send_magic_packet(&socket, mac_address, &broadcast_net) {
+            Ok(_) => {}
+            Err(err) => {
+                println!("Error: {}, original MAC address: {}", err, mac_address);
+                continue;
+            }
+        }
         if verbose_mode {
             println!(
                 "Sent magic packet to {}, and broadcasted on {}",
